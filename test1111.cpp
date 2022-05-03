@@ -23,9 +23,30 @@ int val=0;
 class operations
 {   
     
- 
+    
     public:
-        void up(int mat[4][4])
+    
+       int mat[4][4];
+       std::vector<int> numbers;
+       
+    operations(){
+        for(int i=1; i<16; i++)       
+        numbers.push_back(i);
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
+
+ 
+   for(int i=0;i<4;i++){
+       for(int j=0;j<4;j++){
+           
+           int number = numbers[val];
+           mat[i][j]=number;
+           val++;
+       }
+   } 
+    }
+        void up()
         {   int i=special;
             int j=special1;
             int curr=mat[i][j];
@@ -40,7 +61,7 @@ class operations
         }
             
         }
-        void down(int mat[4][4])
+        void down()
         {
             int i=special;
             int j=special1;
@@ -57,7 +78,7 @@ class operations
             }
         }
         }
-        void left(int mat[4][4])
+        void left()
         {
           int i=special;
             int j=special1;
@@ -74,7 +95,7 @@ class operations
             }
         }   
         }
-        void right(int mat[4][4])
+        void right()
         {
             int i=special;
             int j=special1;
@@ -91,15 +112,55 @@ class operations
             }
         }   
         }
+        void openFile(){
+              cout<<"Enter your filename : ";
+              string open_name;
+       cin>>open_name;
+       ifstream infile;
+       infile.open(open_name);
+       for (int i = 0; i < 4; i++)
+       {
+        for (int j = 0; j < 4; j++){
+            
+            infile >>mat[i][j];
+            if (mat[i][j]==1000){
+                special=i;
+                special1=j;
+            }
+        }
+       }
+        }
+        void printMatrix(){
+            for(int i=0;i<4;i++){
+         cout<<"\t\t\t";
+       for(int j=0;j<4;j++){
+           if(mat[i][j]==1000){
+               cout<<"_"<<"\t";
+           }
+           else{
+                cout<<mat[i][j]<<"\t";
+              
+           }
+       }
+       cout<<"\n";
+        }
         
-};
 
-int gen_rand(int mat[4][4],int i,int j){
+    
+    
+
+        
+}
+        int gen_rand(int i,int j){
     val++;
    int rand_generated=rand()%15+1;
    return numbers[val];
     
 }
+    
+    
+};
+
 
 
 
@@ -112,37 +173,23 @@ int main()
    char command = 'P';
    char op;
    srand(time(0));
-   int mat[4][4];
+
    int upper=15;
    int lower=1;
    cout<<"\n\n\n\t\t\t\t\t\t\t\t\tHow to Play the Game?\n\t\t\t\t\t\t\t\t\t\tu-->UP\n\t\t\t\t\t\t\t\t\t\td-->Down\n\t\t\t\t\t\t\t\t\t\tl-->Left\n\t\t\t\t\t\t\t\t\t\tr-->Right\n";
-    std::vector<int> numbers;
-    //Random Fill
-    for(int i=1; i<16; i++)       
-        numbers.push_back(i);
-
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
-
- 
-   for(int i=0;i<4;i++){
-       for(int j=0;j<4;j++){
-           
-           int number = numbers[val];
-           mat[i][j]=number;
-           val++;
-       }
-   }
+    
+    
+   
     srand(time(0));
     special=(rand() % 4);
     special1=(rand()%4);
-    int last=mat[special][special1];
-    mat[special][special1]=1000;
-    if (mat[3][3]==1000){
-        mat[3][3]=1000;
+    int last=obj.mat[special][special1];
+    obj.mat[special][special1]=1000;
+    if (obj.mat[3][3]==1000){
+        obj.mat[3][3]=1000;
     }
     else{
-        mat[3][3]=last;
+        obj.mat[3][3]=last;
     }
    
    
@@ -150,20 +197,7 @@ int main()
    char saved,open_name[50];
    cin>>saved;
    if(saved=='y'){
-       cout<<"Enter your filename : ";
-       cin>>open_name;
-       ifstream infile;
-       infile.open(open_name);
-       for (int i = 0; i < 4; i++)
-       {
-        for (int j = 0; j < 4; j++){
-            if (mat[i][j]==1000){
-                special=i;
-                special1=j;
-            }
-            infile >> mat[i][j];
-        }
-       }
+     obj.openFile();
        
 
        
@@ -172,7 +206,7 @@ int main()
    int crt_mat[4][4]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1000};
    while(command !='s'){
        
-    if(mat[3][3]==1000 && mat[0][0]==1 && mat[1][1]==5){
+    if(obj.mat[3][3]==1000 && obj.mat[0][0]==1 && obj.mat[1][1]==5){
            break;
        }
     if(First){
@@ -180,42 +214,36 @@ int main()
         First=false;
     } 
     if(skip==false){
-    for(int i=0;i<4;i++){
-         cout<<"\t\t\t";
-       for(int j=0;j<4;j++){
-           if(mat[i][j]==1000){
-               cout<<"_"<<"\t";
-           }
-           else{
-                cout<<mat[i][j]<<"\t";
-              
-           }
-       }
-       cout<<"\n";
+        
+      obj.printMatrix();
+      cout<<"Enter Your option :\n";
+      
+      
+       
    }
-    cout<<"Enter Your option :\n";
-    }
-    op=getch();
+   
+        op=getch();
+    
   
     switch(op){
         
         case KEY_UP:   
-                    obj.up(mat);
+                    obj.up();
                     count++;
                     skip=false;
                     break;
         case KEY_LEFT:   
-                    obj.left(mat);
+                    obj.left();
                     count++;
                     skip=false;
                     break;
         case KEY_RIGHT:   
-                    obj.right(mat);
+                    obj.right();
                     count++;
                     skip=false;
                     break;
         case KEY_DOWN:   
-                    obj.down(mat);
+                    obj.down();
                     count++;
                     skip=false;
                     break;
@@ -224,11 +252,13 @@ int main()
                     break;
         default:
                     skip=true;
-                    
+                    //cout<<"Invalid key";
                     break;
          
                     
-    }}
+    }
+    }
+    
     
 cout<<"\nNo.of.Steps taken: "<<count<<" Game Over! Try Again";
 char ans; 
@@ -243,7 +273,7 @@ if(ans=='y'){
     for(int j=0 ; j<4 ; j++){
     
         for(int i=0;i<4;i++)
-        outfile << mat[j][i]<<"\t";
+        outfile << obj.mat[j][i]<<"\t";
         outfile<< std::endl;
 }
 }
