@@ -117,7 +117,7 @@ int main()
    int lower=1;
    cout<<"\n\n\n\t\t\t\t\t\t\t\t\tHow to Play the Game?\n\t\t\t\t\t\t\t\t\t\tu-->UP\n\t\t\t\t\t\t\t\t\t\td-->Down\n\t\t\t\t\t\t\t\t\t\tl-->Left\n\t\t\t\t\t\t\t\t\t\tr-->Right\n";
     std::vector<int> numbers;
-    
+    //Random Fill
     for(int i=1; i<16; i++)       
         numbers.push_back(i);
 
@@ -145,8 +145,31 @@ int main()
         mat[3][3]=last;
     }
    
-    //Random Fill
    
+   cout<<"Do you have a saved version of ur Game (y/n) : ";
+   char saved,open_name[50];
+   cin>>saved;
+   if(saved=='y'){
+       cout<<"Enter your filename : ";
+       cin>>open_name;
+       ifstream infile;
+       infile.open(open_name);
+       for (int i = 0; i < 4; i++)
+       {
+        for (int j = 0; j < 4; j++){
+            
+            infile >> mat[i][j];
+            if (mat[i][j]==1000){
+                special=i;
+                special1=j;
+            }
+        }
+       }
+       
+
+       
+
+   }
    int crt_mat[4][4]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,1000};
    while(command !='s'){
        
